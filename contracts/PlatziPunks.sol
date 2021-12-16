@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./Base64.sol";
 
 contract PlatziPunks is ERC721, ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
@@ -22,6 +23,22 @@ contract PlatziPunks is ERC721, ERC721Enumerable, Ownable {
         require(tokenId <= maxSupply, "No PLatzi Punks left =(");
         _tokenIdCounter.increment();
         _safeMint(msg.sender, tokenId);
+    }
+
+    function tokenURI(uint256 tokenId) public view override  returns(string memory) {
+        require(_exists(tokenId), "ERC721 Metadata: URI query for nonexistent token");
+
+        string memory jsonURI = Base64.encode(
+            abi.encodePacked(
+                '{ "name": "PlatziPunks #',
+                tokenId, //TODO
+                '", "description": "Platzi Punks are randomized Avataaars stored on chain to teach DApp development on Platzi", "image": "',
+                "//TODO: Calculate imager URL",
+                '"}'
+            )
+        );
+        
+        return string(abi.encodePacked("data:application/json;base64,", jsonURI));
     }
 
     // The following functions are overrides required by inherited Contracts
