@@ -9,15 +9,19 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract PlatziPunks is ERC721, ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
+    uint256 public maxSupply;
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("PlatziPunks", "PLPKS") {}
+    constructor(uint256 _maxSupply) ERC721("PlatziPunks", "PLPKS") {
+        maxSupply = _maxSupply;
+    }
 
-    function safeMint(address to) public onlyOwner {
+    function mint() public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
+        require(tokenId <= maxSupply, "No PLatzi Punks left =(");
         _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
+        _safeMint(msg.sender, tokenId);
     }
 
     // The following functions are overrides required by inherited Contracts
