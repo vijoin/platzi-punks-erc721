@@ -225,13 +225,13 @@ contract PlatziPunksDNA {
         );
     }
 
-    function _getAccessoriesType(uint8 _dna) public view returns (string memory)
+    function getAccessoriesType(uint256 _dna) public view returns (string memory)
     {
         uint8 dnaSection = _getDNASection(_dna, 0);
         return _accessoriesType[dnaSection % _accessoriesType.length];
     }
 
-    function _getClotheColor(uint8 _dna) public view returns (string memory) {
+    function getClotheColor(uint256 _dna) public view returns (string memory) {
         uint8 dnaSection = _getDNASection(_dna, 2);
         return _clotheColor[dnaSection % _clotheColor.length];
     }
