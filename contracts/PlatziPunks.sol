@@ -11,6 +11,8 @@ import "./PlatziPunksDNA.sol";
 
 contract PlatziPunks is ERC721, ERC721Enumerable, Ownable, PlatziPunksDNA {
     using Counters for Counters.Counter;
+    using Strings for uint256;
+
     uint256 public maxSupply;
     mapping(uint256 => uint256) public tokenDNA;
 
@@ -22,7 +24,7 @@ contract PlatziPunks is ERC721, ERC721Enumerable, Ownable, PlatziPunksDNA {
 
     function mint() public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
-        require(tokenId <= maxSupply, "No PLatzi Punks left =(");
+        require(tokenId < maxSupply, "No PlatziPunks left =(");
         tokenDNA[tokenId] = deterministicPseudoRandomDNA(tokenId, msg.sender);
 
         _tokenIdCounter.increment();
@@ -73,7 +75,7 @@ contract PlatziPunks is ERC721, ERC721Enumerable, Ownable, PlatziPunksDNA {
         string memory jsonURI = Base64.encode(
             abi.encodePacked(
                 '{ "name": "PlatziPunks #',
-                tokenId, //TODO
+                tokenId.toString(),
                 '", "description": "Platzi Punks are randomized Avataaars stored on chain to teach DApp development on Platzi", "image": "',
                 image,
                 '"}'
