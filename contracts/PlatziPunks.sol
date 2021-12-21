@@ -1,4 +1,4 @@
-// SPDX-License-Identifier:MIT
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Base64.sol";
 import "./PlatziPunksDNA.sol";
 
@@ -22,13 +23,13 @@ contract PlatziPunks is ERC721, ERC721Enumerable, Ownable, PlatziPunksDNA {
         maxSupply = _maxSupply;
     }
 
-    function mint() public onlyOwner {
+    function mint() public {
         uint256 tokenId = _tokenIdCounter.current();
         require(tokenId < maxSupply, "No PlatziPunks left =(");
         tokenDNA[tokenId] = deterministicPseudoRandomDNA(tokenId, msg.sender);
 
-        _tokenIdCounter.increment();
         _safeMint(msg.sender, tokenId);
+        _tokenIdCounter.increment();
     }
 
     function _baseURI() internal pure override returns(string memory){
@@ -101,6 +102,6 @@ contract PlatziPunks is ERC721, ERC721Enumerable, Ownable, PlatziPunksDNA {
         override(ERC721, ERC721Enumerable)
         returns(bool)
     {
-        super.supportsInterface(interfaceId);
+        return super.supportsInterface(interfaceId);
     }
 }
